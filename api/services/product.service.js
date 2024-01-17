@@ -1,6 +1,8 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
 
+const sequelize = require('../libs/sequelize');
+
 class ProductsService {
   constructor() {
     this.products = [];
@@ -12,7 +14,7 @@ class ProductsService {
     for (let index = 0; index < limit; index++) {
       this.products.push({
         id: faker.string.uuid(),
-        name: faker.internet.userName(),
+        name: faker.commerce.productName(),
         price: parseInt(faker.commerce.price(), 10),
         image: faker.image.avatar(),
         isBlock: faker.datatype.boolean(),
@@ -29,12 +31,10 @@ class ProductsService {
     return newProduct;
   }
 
-  find() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this.products);
-      }, 3000);
-    });
+  async find() {
+    const query = 'SELECT * FROM task';
+    const [data] = await sequelize.query(query);
+    return data;
   }
 
   async findOne(id) {
